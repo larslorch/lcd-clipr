@@ -1,0 +1,26 @@
+---
+n_folds: 10
+n_perturbations_val: 0
+
+id: linear
+require_test_envs: true
+test_all_train_singles_combinations: false
+
+# linear model
+genes: 1000
+graph: scale_free_outgoing
+degree: 10
+param_low: 1.0
+param_high: 3.0
+matrix_eps: 0.5
+bias: true
+
+# perturbations
+perturbation_mode: on_target
+shift_low: 5
+shift_high: 15
+shift_both_sides: true
+
+cells_per_perturb: 200
+n_perturbations_train: 1000
+n_perturbations_test: 0

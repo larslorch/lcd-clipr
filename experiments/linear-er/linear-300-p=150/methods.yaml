@@ -1,0 +1,91 @@
+---
+
+ours-mlp:
+
+    # model
+    model: main
+
+    # noise model
+    memoize_denoising: false
+    noise_model: null
+    scale_standardization: all-std
+    noise_model_kwargs:
+      dummy_kwarg: null
+
+    exit_after_denoising: false
+    decode_sanity_checks: false
+    train_only: false
+
+    # intervention
+    interv:
+      mlp:
+        mode: inject_linear
+        observ_as_env: false
+        all_layers: true
+        agg: sum
+        embed_dim: 1024
+
+    # architecture
+    full_sigma: false
+    wiener_procs: null
+
+    # mlp
+    mlp_layers: 2
+    mlp_hidden: 1024
+    mlp_activation: tanh
+
+    noise_annealing:
+      sigma_min: 0.01
+      sigma_max: 10.0
+      sigma_steps: 30
+
+    dsm:
+      model: cond
+      param: song
+      loss_weighting: 2.0
+
+    n_metric_diffuse: 1000
+    n_metric: 5000
+    sde_kwargs:
+      anneal_dt: 1e-6
+      anneal_steps: 500
+      sim_env_chunk_size: 32
+
+    causal_anneal_sparsify: 1
+    causal_mat_kwargs:
+        tikhonov: 3e-4
+
+    # optimization
+    batch_size: 8192
+
+    steps: 50000
+    optimizer: adam
+    learning_rate: cos__1e-3
+    grad_clip: 0.0
+    weight_decay: 1e0
+
+    components:
+      interv:
+        stopgrad: "x"
+      mlp:
+        active: "-"
+        stopgrad: "x"
+
+    # logging
+    log_every: 2500
+    eval_train_every: null
+    eval_test_every: null
+    eval_gi_every: null
+    plot_every: null
+
+    plot_proj: false
+    proj_umap: false
+
+    # compute
+    __run__:
+      n_cpus: 4
+      n_gpus: 1
+      mem: 60000
+      hours: 1
+      mins: 59
+      gpu_mtotal: 20g

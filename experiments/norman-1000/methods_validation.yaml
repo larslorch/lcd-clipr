@@ -1,0 +1,182 @@
+---
+__grid__:
+
+ctrl:
+  __run__:
+    n_cpus: 1
+    n_gpus: 0
+    mem: 30000
+    hours: 0
+    mins: 20
+
+perturbed:
+  __run__:
+    n_cpus: 1
+    n_gpus: 0
+    mem: 30000
+    hours: 0
+    mins: 20
+
+salt:
+  __run__:
+    n_cpus: 1
+    n_gpus: 0
+    mem: 30000
+    hours: 0
+    mins: 20
+
+peper:
+  steps: 30000
+  batch_size: 256
+  learning_rate: 0.0001
+  weight_decay: [ 0.1, 0.003, 0.0001 ]
+  hidden_size: [ 256, 1024 ]
+  loss: cmd
+  layers: [ 1, 2 ]
+  __run__:
+    n_cpus: 2
+    n_gpus: 1
+    mem: 30000
+    hours: 3
+    mins: 59
+
+cpa:
+  n_latent: [ 64, 256 ]
+  hidden: [ 1024, 2048, 4096 ]
+  layers: 2
+  wd: [ 1e-5, 1e-8 ]
+  reg_adv: [ 1e-2, 1e0 ]
+  dropout: [ 0.0, 0.2 ]
+  __run__:
+    n_cpus: 2
+    n_gpus: 1
+    mem: 30000
+    hours: 23
+    mins: 59
+
+gears:
+  epochs: 20
+  batch_size: [ 32, 256 ]
+  coexpress_threshold: [ 0.4, 0.8 ]
+  num_genes_graph: [ 5, 10, 20 ]
+  gnn_layers: [ 1, 2 ]
+  __run__:
+    n_cpus: 2
+    n_gpus: 1
+    mem: 30000
+    hours: 3
+    mins: 59
+    tmp: 2000
+
+ours-mlp:
+
+    # model
+    model: main
+
+    # noise model
+    memoize_denoising: false
+    noise_model: generative
+    scale_standardization: all-std
+    noise_model_kwargs:
+      mlp_generator: true
+      zero_inflation: true
+      share_pi: true
+      n_samples: 10000
+      steps: 250000
+      optimizer: adam__0.0__0.99
+      lr: warmup_cos__3e-4__5000
+      grad_clip: 1.0
+      generator_hidden: 64
+      generator_layers: 4
+      generator_hidden_wide: 256
+      generator_layers_wide: 2
+      generator_nonlinearity: silu
+      adjust_unit_scaling: true
+      return_unit_scale_states: false
+      debias: false
+      logsumexp_temp:
+        - __tuple__: [ const__1, const__5 ]
+        - __tuple__: [ const__1, const__20 ]
+        - __tuple__: [ const__1, const__100 ]
+      mc_samples: 20000
+      batch_size: 64
+      batch_size_split: 1
+      verbose: 10
+
+    exit_after_denoising: false
+    decode_sanity_checks: false
+    train_only: false
+
+    # intervention
+    interv:
+      mlp:
+        mode: inject_linear
+        observ_as_env: false
+        all_layers: true
+        agg: sum
+        embed_dim: 1024
+
+    # architecture
+    full_sigma: false
+    wiener_procs: null
+
+    # mlp
+    mlp_layers: 2
+    mlp_hidden: [ 1024, 2048 ]
+    mlp_activation: tanh
+
+    noise_annealing:
+      sigma_min: 0.01
+      sigma_max: 10.0
+      sigma_steps: 30
+
+    dsm:
+      model: cond
+      param: song
+      loss_weighting: 2.0
+
+    n_metric_diffuse: 1000
+    n_metric: 5000
+    sde_kwargs:
+      anneal_dt: 1e-6
+      anneal_steps: 500
+      sim_env_chunk_size: 32
+
+    causal_anneal_sparsify: 1
+    causal_mat_kwargs:
+        tikhonov: 1e-4
+
+    # optimization
+    batch_size: 8192
+
+    steps: 50000
+    optimizer: adam
+    learning_rate: cos__1e-3
+    grad_clip: 0.0
+    weight_decay: [ 3e-2, 1e-1, 3e-1, 1e0, 3e0 ]
+
+    components:
+      interv:
+        stopgrad: "x"
+      mlp:
+        active: "-"
+        stopgrad: "x"
+
+    # logging
+    log_every: 2500
+    eval_train_every: null
+    eval_test_every: null
+    eval_gi_every: null
+    plot_every: null
+
+    plot_proj: false
+    proj_umap: false
+
+    # compute
+    __run__:
+      n_cpus: 4
+      n_gpus: 1
+      mem: 24000
+      hours: 23
+      mins: 59
+      gpu_mtotal: 20g

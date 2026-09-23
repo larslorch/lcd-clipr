@@ -1,0 +1,112 @@
+---
+
+ours-mlp:
+
+    # model
+    model: main
+
+    # noise model
+    memoize_denoising: false
+    noise_model: generative
+    scale_standardization: all-std
+    noise_model_kwargs:
+      mlp_generator: true
+      zero_inflation: true
+      share_pi: true
+      n_samples: 100
+      steps: 100
+      optimizer: adam__0.0__0.99
+      lr: warmup_cos__3e-4__5000
+      grad_clip: 1.0
+      generator_hidden: 64
+      generator_layers: 4
+      generator_hidden_wide: 256
+      generator_layers_wide: 2
+      generator_nonlinearity: silu
+      adjust_unit_scaling: true
+      return_unit_scale_states: false
+      debias: false
+      logsumexp_temp:
+        __tuple__: [ const__1, const__100 ]
+      mc_samples: 100
+      batch_size: 64
+      batch_size_split: 1
+      verbose: 10
+
+    exit_after_denoising: false
+    decode_sanity_checks: false
+    train_only: false
+
+    # intervention
+    interv:
+      mlp:
+        mode: inject_linear
+        observ_as_env: false
+        all_layers: true
+        agg: sum
+        embed_dim: 64
+
+    # architecture
+    full_sigma: false
+    wiener_procs: null
+
+    # mlp
+    mlp_layers: 2
+    mlp_hidden: 64
+    mlp_activation: tanh
+
+    noise_annealing:
+      sigma_min: 0.01
+      sigma_max: 10.0
+      sigma_steps: 30
+
+    dsm:
+      model: cond
+      param: song
+      loss_weighting: 2.0
+
+    n_metric_diffuse: 100
+    n_metric: 100
+    sde_kwargs:
+      anneal_dt: 1e-6
+      anneal_steps: 5
+      sim_env_chunk_size: 32
+
+    causal_anneal_sparsify: 1
+    causal_mat_kwargs:
+        tikhonov: 1e-4
+
+    # optimization
+    batch_size: 256
+
+    steps: 100
+    optimizer: adam
+    learning_rate: cos__1e-3
+    grad_clip: 0.0
+    weight_decay: 1e0
+
+    components:
+      interv:
+        stopgrad: "x"
+      mlp:
+        active: "-"
+        stopgrad: "x"
+
+    # logging
+    log_every: null
+    eval_train_every: null
+    eval_test_every: null
+    eval_gi_every: null
+    plot_every: null
+
+    plot_proj: false
+    proj_umap: false
+
+    # compute
+    __run__:
+      n_cpus: 4
+      n_gpus: 1
+      mem: 24000
+      hours: 23
+      mins: 59
+      gpu_mtotal: 20g

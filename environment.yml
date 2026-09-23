@@ -1,0 +1,12 @@
+name: lcd_clipr
+channels:
+- conda-forge
+- defaults
+dependencies:
+- conda
+- python=3.11.6
+- cairo # does not work via pip
+- pip
+- pip:
+  - -r requirements.txt
+  - -e . # this repo

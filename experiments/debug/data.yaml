@@ -1,0 +1,28 @@
+---
+n_folds: 1
+n_perturbations_val: 5
+
+id: wessels
+require_test_envs: true
+test_all_train_singles_combinations: false
+
+# cell quality control
+min_genes_per_cell: 5
+min_cells_per_gene: 200
+
+# perturbation quality control
+min_cells_per_perturbation: 100
+
+# gene selection
+n_genes: 50
+gene_selection: hvg_train_singles
+gene_selection_prio_perturbed: true
+gene_selection_prio_marker: true
+
+# metrics
+differential_expression_genes: 20
+gi_genes_mean_umi: 0.5
+
+# perturbation selection
+perturbations_train_singles_max: null
+perturbations_train_doubles_max: 20
