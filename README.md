@@ -1,6 +1,7 @@
 
 ## Latent Causal Diffusions for Single-Cell Perturbation Modeling
 
+
 **Authors**: 
 Lars Lorch,
 Jiaqi Zhang,
@@ -9,8 +10,9 @@ Andreas Krause,
 Bernhard Schölkopf,
 and Caroline Uhler
 
+*PNAS* 123 (41) e2602630123, 2026
 
-The preprint is available [**here**](https://arxiv.org/abs/2601.15341).
+The publication is available [**here**](https://www.pnas.org/doi/10.1073/pnas.2602630123).
 
 
 ## Installation
@@ -266,6 +268,23 @@ python scripts/plot_figure_4_supplementary.py \
 ### Figs. S3 and S4
 
 Generated during the `norman-1000 --data` step and stored in the respective `results/` folder.
+
+## Citation
+
+
+
+```
+@article{lorch2026latent,
+  title={Latent causal diffusions for single-cell perturbation modeling},
+  author={Lorch, Lars and Zhang, Jiaqi and Bunne, Charlotte and Krause, Andreas and Sch{\"o}lkopf, Bernhard and Uhler, Caroline},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={123},
+  number={41},
+  pages={e2602630123},
+  year={2026},
+  publisher={National Academy of Sciences},
+}
+```
 
 
 ## License
